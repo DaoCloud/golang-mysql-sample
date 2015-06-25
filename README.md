@@ -1,9 +1,9 @@
-Golang Web Application with mysql connection
+Golang Web Application with Mysql connection
 # Build Image
 docker build -t daocloud/go-mysql .
 
 
-## Below Mongo Connection Env and their default value
+## Below Mysql Connection Env and their default value
 * MYSQL_PORT_27017_TCP_ADDR=localhost
 * MYSQL_PORT_27017_TCP_PORT=27017
 * MYSQL_USERNAME /* leave empty by default */
