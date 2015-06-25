@@ -1,0 +1,25 @@
+image: daocloud/ci-golang:1.4
+
+services:
+  - mysql
+
+# using default docker-link env
+#env:
+#  - mysqlDB_PORT_27017_TCP_ADDR=mysqldb
+#  - mysqlDB_PORT_27017_TCP_PORT=27017
+
+install:
+  - sudo apt-get update
+  - sudo apt-get -y install bzr
+
+before_script:
+  - mkdir -p /gopath/src/golang-mysql-sample
+  - mv ./* /gopath/src/golang-mysql-sample
+
+script:
+  - export GOPATH=/gopath
+  - export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+  - cd $GOPATH/src/golang-mysql-sample
+  - go get -t
+  - go install golang-mysql-sample
+  - go test golang-mysql-sample
