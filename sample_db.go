@@ -15,32 +15,34 @@ func MustConnectDB() {
     if err := ConnectDatabase(); err != nil {
         panic(err)
     }
-    InitDB()
 }
 
-func ConnectDatabase() (err error) {
+var (
+    username string
+    password string
+    host     string
+    port     string
+    database string
+)
 
-    username := os.Getenv("MYSQL_USERNAME")
-    password := os.Getenv("MYSQL_PASSWORD")
-    if username == "" {
-        username = "root"
-    }
+func Config() {
+    username = os.Getenv("MYSQL_USERNAME")
+    password = os.Getenv("MYSQL_PASSWORD")
 
-    host := os.Getenv("MYSQL_PORT_3306_TCP_ADDR")
+    host = os.Getenv("MYSQL_PORT_3306_TCP_ADDR")
     if host == "" {
         host = "localhost"
     }
 
-    port := os.Getenv("MYSQL_PORT_3306_TCP_PORT")
+    port = os.Getenv("MYSQL_PORT_3306_TCP_PORT")
     if port == "" {
         port = "3306"
     }
 
-    database := "test"
+    database = os.Getenv("MYSQL_INSTANCE_NAME")
+}
 
-    if len(os.Getenv("MYSQL_INSTANCE_NAME")) > 0 {
-        database = os.Getenv("MYSQL_INSTANCE_NAME")
-    }
+func ConnectDatabase() (err error) {
 
     uri := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, database)
 

@@ -4,9 +4,8 @@ services:
   - mysql
 
 # using default docker-link env
-#env:
-#  - mysqlDB_PORT_27017_TCP_ADDR=mysqldb
-#  - mysqlDB_PORT_27017_TCP_PORT=27017
+env:
+  - MYSQL_INSTANCE_NAME = "test"
 
 install:
   - sudo apt-get update
@@ -18,8 +17,5 @@ before_script:
 
 script:
   - export GOPATH=/gopath
-  - export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
-  - cd $GOPATH/src/golang-mysql-sample
   - go get -t
-  - go install golang-mysql-sample
   - go test golang-mysql-sample
