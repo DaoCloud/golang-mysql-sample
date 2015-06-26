@@ -6,6 +6,7 @@ services:
 # using default docker-link env
 env:
   - MYSQL_INSTANCE_NAME = "test"
+  - MYSQL_USERNAME = "root"
 
 install:
   - sudo apt-get update
