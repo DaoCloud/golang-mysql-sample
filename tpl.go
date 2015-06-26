@@ -3,7 +3,7 @@ package main
 var tpl = []byte(`<!DOCTYPE html>
 <html>
 <head>
-	<title>Golang-Mongo-Sample</title>
+	<title>Golang-Mysql-Sample</title>
 </head>
 <body>
 	<h1 align="center">It works!</h1>
