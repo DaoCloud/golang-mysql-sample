@@ -1,4 +1,4 @@
-image: daocloud/ci-golang:1.2
+image: daocloud/ci-golang:1.4
 
 services:
   - mysql
@@ -10,7 +10,6 @@ env:
 
 install:
   - sudo apt-get update
-  - sudo apt-get -y install bzr
 
 before_script:
   - mkdir -p /gopath/src/golang-mysql-sample
