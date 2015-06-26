@@ -17,5 +17,5 @@ before_script:
 
 script:
   - export GOPATH=/gopath
-  - go get -t
+  - go get -t golang-mysql-sample
   - go test golang-mysql-sample
