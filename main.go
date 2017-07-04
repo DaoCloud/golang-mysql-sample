@@ -60,7 +60,7 @@ func insert(res http.ResponseWriter, req *http.Request) {
 
 	Insert(person)
 
-	log.Println("Insert new person %v", *person)
+	log.Printf("Insert new person %v\n", *person)
 	http.Redirect(res, req, "/", 302)
 }
 
