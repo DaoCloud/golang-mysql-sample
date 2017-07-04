@@ -1,82 +1,82 @@
 package main
 
 import (
-    "database/sql"
-    "fmt"
-    "log"
-    "os"
+	"database/sql"
+	"fmt"
+	"log"
+	"os"
 
-    _ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var db *sql.DB
 
 func MustConnectDB() {
-    if err := ConnectDatabase(); err != nil {
-        panic(err)
-    }
+	if err := ConnectDatabase(); err != nil {
+		panic(err)
+	}
 }
 
 var (
-    username string
-    password string
-    host     string
-    port     string
-    database string
+	username string
+	password string
+	host     string
+	port     string
+	database string
 )
 
 func Config() {
-    username = os.Getenv("MYSQL_USERNAME")
-    password = os.Getenv("MYSQL_PASSWORD")
+	username = os.Getenv("MYSQL_USERNAME")
+	password = os.Getenv("MYSQL_PASSWORD")
 
-    host = os.Getenv("MYSQL_PORT_3306_TCP_ADDR")
-    if host == "" {
-        host = "localhost"
-    }
+	host = os.Getenv("MYSQL_PORT_3306_TCP_ADDR")
+	if host == "" {
+		host = "localhost"
+	}
 
-    port = os.Getenv("MYSQL_PORT_3306_TCP_PORT")
-    if port == "" {
-        port = "3306"
-    }
+	port = os.Getenv("MYSQL_PORT_3306_TCP_PORT")
+	if port == "" {
+		port = "3306"
+	}
 
-    database = os.Getenv("MYSQL_INSTANCE_NAME")
+	database = os.Getenv("MYSQL_INSTANCE_NAME")
 }
 
 func ConnectDatabase() (err error) {
 
-    uri := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, database)
+	uri := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, database)
 
-    if db, err = sql.Open("mysql", uri); err != nil {
-        return
-    }
+	if db, err = sql.Open("mysql", uri); err != nil {
+		return
+	}
 
-    err = db.Ping()
-    return
+	err = db.Ping()
+	return
 }
 
 func InitDB() {
-    defer func() {
-        if e := recover(); e != nil {
-            log.Println(e)
-        }
-    }()
+	defer func() {
+		if e := recover(); e != nil {
+			log.Println(e)
+		}
+	}()
 
-    CreateTable()
-    Insert(&Person{Name: "Ale", Phone: "+55 53 1234 4321"})
-    Insert(&Person{Name: "Cla", Phone: "+66 33 1234 5678"})
+	CreateTable()
+	Insert(&Person{Name: "Ale", Phone: "+55 53 1234 4321"})
+	Insert(&Person{Name: "Cla", Phone: "+66 33 1234 5678"})
 }
 
 func CreateTable() {
-    stmt, err := db.Prepare(createTable)
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
+	stmt, err := db.Prepare(createTable)
+	if err != nil {
+		panic(err)
+	}
+	defer stmt.Close()
 
-    _, err = stmt.Exec()
-    if err != nil {
-        panic(err)
-    }
+	_, err = stmt.Exec()
+	if err != nil {
+		panic(err)
+	}
 }
 
 var createTable = `
@@ -88,18 +88,18 @@ CREATE TABLE IF NOT EXISTS people (
 `
 
 func Drop() {
-    stmt, err := db.Prepare(dropTable)
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
+	stmt, err := db.Prepare(dropTable)
+	if err != nil {
+		panic(err)
+	}
+	defer stmt.Close()
 
-    _, err = stmt.Exec()
-    if err != nil {
-        panic(err)
-    }
+	_, err = stmt.Exec()
+	if err != nil {
+		panic(err)
+	}
 
-    CreateTable()
+	CreateTable()
 }
 
 var dropTable = `

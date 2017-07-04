@@ -1,10 +1,11 @@
 package main
 
 import (
+	"testing"
+
 	. "github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/reporters"
 	. "github.com/onsi/gomega"
-	"testing"
 )
 
 func TestSample(t *testing.T) {
