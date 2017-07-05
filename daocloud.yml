@@ -1,37 +1,60 @@
-version: 2.0
+version: 3
 
-test:
-  image: daocloud/ci-golang:1.4
-  
+image: ubuntu:16.04
+stages:
+- test
+- build
+
+Golang测试:
+  stage: test
+  job_type: golang-test
+  only:
+    branches:
+    - .*
+    tags:
+    - .*
+  envs:
+  - key: MYSQL_INSTANCE_NAME
+    value: test
+  - key: MYSQL_USERNAME
+    value: root
+  image: golang:latest
+  name: Golang测试
+  package: github.com/DaoCloud/golang-mysql-sample
+  scripts:
+  - mkdir -p ${GOPATH}/src/${PACKAGE}
+  - cp -r $PWD/* ${GOPATH}/src/${PACKAGE}
+  - ""
+  - go get github.com/axw/gocov/gocov/...
+  - go install github.com/axw/gocov/gocov
+  - go get github.com/AlekSi/gocov-xml
+  - go install github.com/AlekSi/gocov-xml
+  - ""
+  - go get -t ${PACKAGE}
+  - path=$(go list ${PACKAGE} | grep -v vendor)
+  - go vet ${path}
+  - gocov test -v ${path} > result
+  - ""
+  - cat result | gocov-xml > coverage.xml
+  - cat result | gocov report
   services:
-    - mysql
-  
-  # using default docker-link env
-  env:
-    - MYSQL_INSTANCE_NAME = "test"
-    - MYSQL_USERNAME = "root"
-  
-  install:
-    - sudo apt-get update
-  
-  before_script:
-    - mkdir -p /gopath/src/golang-mysql-sample
-    - mv ./* /gopath/src/golang-mysql-sample
-  
-  script:
-    - export GOPATH=/gopath
-    - go get -t golang-mysql-sample
-    - go test golang-mysql-sample
+  - mysql
 
-build:
-  lite_image:
-    compile:
-      dockerfile_path: Dockerfile
-      build_dir: /
-      cache: true
-    extract:
-      - /go/bin/app
-    package:
-      dockerfile_path: Dockerfile.package
-      build_dir: /
-      cache: true
+安全构建任务:
+  stage: build
+  job_type: lite_image_build
+  only:
+    branches:
+    - .*
+    tags:
+    - .*
+  compile:
+    build_dir: /
+    cache: true
+    dockerfile_path: /Dockerfile
+  extract:
+  - /go/bin/app
+  package:
+    build_dir: /
+    cache: true
+    dockerfile_path: /Dockerfile.package
